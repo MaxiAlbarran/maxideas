@@ -1,8 +1,11 @@
 import React from 'react'
+import {Container, Heading} from '@chakra-ui/react'
 
 const App = () => {
   return (
-    <div>App</div>
+    <Container minW={"200px"} minH="700px" bgColor="principal">
+      <Heading bgColor={"secondary"}> Hola mundo </Heading>
+    </Container>
   )
 }
 
