@@ -1,15 +1,17 @@
 import { extendTheme } from "@chakra-ui/react";
 
 const fonts = {
-  poppins: "'Poppins', sans-serif",
-  montserrat: "'Montserrat', sans-serif",
+  anybody: "'Anybody', sans-serif",
+  roboto: "'Roboto', sans-serif",
 };
 
 const colors = {
-  principal: "hsl(207, 26%, 17%)",
-  pepe: "#EDF2F7",
-  secondary: "#F0EBEB",
-  lightText: "#1313A",
+  lightBgColor: "#F2F2F2",  
+  lightTextColor: "#F5F5FA",
+  darkTextColor: "#1A1313"
+//   blue: #457cf6 || #a5bff8
+//   orange: #FFAB2F || #fab16d
+//   gray: #c1c1c1 || #999
 };
 
 const breakpoints = {
@@ -20,6 +22,20 @@ const breakpoints = {
   '2xl': '1536px',
 }
 
+const components = {
+    Heading: {
+        baseStyle: {
+            fontFamily: 'anybody'
+        }
+    },
+    Text:{
+        baseStyle: {
+            fontFamily: 'roboto',
+            fontWeight: '500'
+        }
+    }
+}
+
 const theme = extendTheme({
   fonts,
   colors,
@@ -27,10 +43,11 @@ const theme = extendTheme({
   styles:{
     global:{
         body:{
-            bg: "red"
+            bg: "#333",
         }
     }
-  }
+  },
+  components
 });
 
 export default theme;

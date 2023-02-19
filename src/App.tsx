@@ -1,12 +1,12 @@
-import React from 'react'
-import {Container, Heading} from '@chakra-ui/react'
+import { Container, Heading } from "@chakra-ui/react";
+import Login from "./pages/Login";
 
 const App = () => {
   return (
-    <Container minW={"200px"} minH="700px" bgColor="principal">
-      <Heading bgColor={"secondary"}> Hola mundo </Heading>
-    </Container>
-  )
-}
+    <>
+      <Login />
+    </>
+  );
+};
 
-export default App
+export default App;
