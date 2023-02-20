@@ -1,10 +1,11 @@
-import { Container, Heading } from "@chakra-ui/react";
 import Login from "./pages/Login";
+import Registration from "./pages/Registration";
 
 const App = () => {
   return (
     <>
       <Login />
+      <Registration />
     </>
   );
 };
