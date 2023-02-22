@@ -1,8 +1,9 @@
 import { extendTheme } from "@chakra-ui/react";
 
 const fonts = {
-  anybody: "'Anybody', sans-serif",
+  montserrat: "'Montserrat', sans-serif",
   roboto: "'Roboto', sans-serif",
+  murecho: "'Murecho', sans-serif"
 };
 
 const colors = {
@@ -25,7 +26,7 @@ const breakpoints = {
 const components = {
     Heading: {
         baseStyle: {
-            fontFamily: 'anybody'
+            fontFamily: 'montserrat'
         }
     },
     Text:{
