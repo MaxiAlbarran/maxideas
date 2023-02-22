@@ -1,11 +1,14 @@
-import Login from "./pages/Login";
-import Registration from "./pages/Registration";
+import { Routes } from "react-router";
+import { BrowserRouter } from "react-router-dom";
 
 const App = () => {
   return (
     <>
-      <Login />
-      <Registration />
+      <BrowserRouter>
+        <Routes>
+
+        </Routes>
+      </BrowserRouter>
     </>
   );
 };

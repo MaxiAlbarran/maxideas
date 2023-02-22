@@ -1,56 +1,126 @@
-import {
-  Container,
-  VStack,
-  Avatar,
-  Heading,
-  FormControl,
-  FormLabel,
-  Input,
-  InputGroup,
-  InputRightElement,
-  Button,
-  HStack,
-  Box,
-  Text,
-  Flex
-} from "@chakra-ui/react";
-import { useState } from "react";
+import { Container, VStack, HStack, Text, useToast } from "@chakra-ui/react";
+import { ChangeEvent, FormEvent, useState } from "react";
+import { Link, Navigate } from "react-router-dom";
 import CommonInput from "../components/common/input/input";
+import Formulary from "../components/Formulary";
+
+import { auth } from "../config/firebase";
+import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
+
+type NewUser = {
+  name: string;
+  surname: string;
+  email: string;
+  password: string;
+};
 
 const Registration = () => {
-  const [show, setShow] = useState(false);
+  const toast = useToast();
+  const [user, setUser] = useState<NewUser>({
+    name: "",
+    surname: "",
+    email: "",
+    password: "",
+  });
+
+  const [userRegistered, setUserRegistered] = useState(false);
+
+  const handleSubmit = async (e: FormEvent) => {
+    e.preventDefault();
+
+    try {
+      const newUser = await createUserWithEmailAndPassword(
+        auth,
+        user.email,
+        user.password
+      );
+
+      updateProfile(newUser.user, {
+        displayName: user.name + " " + user.surname,
+      });
+
+      toast({
+        title: "Usuario registrado!",
+        status: "success",
+        isClosable: true,
+        position: "top",
+        duration: 2000,
+      });
+
+      setUserRegistered(true);
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
+  const handleChange = (e: ChangeEvent) => {
+    const { target } = e;
+
+    setUser({ ...user, [target.name]: target.value });
+  };
 
   return (
     <Container minW="100%" minH="100vh" display={"grid"} placeContent="center">
-      <VStack align="center" spacing="3" mb="4">
-        <Avatar size="lg" bg="blue.700" />
-        <Heading size="md" textTransform={"uppercase"}>
-          Registration
-        </Heading>
-      </VStack>
-      <Box
-        minW="sm"
-        bgColor="lightBgColor"
-        p={4}
-        rounded="md"
+      <Formulary
+        title="Registration"
+        buttonLabel="Registrarse"
+        onSubmit={(event) => handleSubmit(event)}
       >
-        <Flex direction={"column"} gap="10px">
-            <HStack>
-                <CommonInput label="Nombre" type="text"/>
-                <CommonInput label="Apellido" isRequired={false} type="text"/>
-            </HStack>
+        <VStack spacing="4">
+          <HStack>
+            <CommonInput
+              label="Nombre"
+              type="text"
+              name="name"
+              value={user?.name}
+              onChange={(event) => handleChange(event)}
+            />
+            <CommonInput
+              label="Apellido"
+              isRequired={false}
+              type="text"
+              name="surname"
+              value={user?.surname}
+              onChange={(event) => handleChange(event)}
+            />
+          </HStack>
 
-            <CommonInput label="Email" type="email"/>
-            <CommonInput label="Contraseña" type="password"/>
+          <CommonInput
+            label="Email"
+            type="email"
+            name="email"
+            value={user?.email}
+            onChange={(event) => handleChange(event)}
+          />
+          <CommonInput
+            label="Contraseña"
+            type="password"
+            name="password"
+            value={user?.password}
+            onChange={(event) => handleChange(event)}
+            placeholder="Debe contener al menos 6 caracteres"
+          />
+        </VStack>
 
-        </Flex>
+        <HStack align="center" justify={"center"} py="1" my="5">
+          <Text color="#999" fontSize="sm">
+            Ya tienes una cuenta?
+          </Text>
+          <Text
+            color="blue.700"
+            fontSize="md"
+            _hover={{ textDecorationLine: "underline" }}
+          >
+            <Link to="/">Login!</Link>
+          </Text>
+        </HStack>
+      </Formulary>
 
-
-        <Button bgColor={"blue.700"} _hover={{ bgColor: "blue.700" }}>
-          Registrate
-        </Button>
-
-      </Box>
+      {userRegistered && (
+        <>
+          <Navigate to="/" />
+        </>
+      )}
     </Container>
   );
 };

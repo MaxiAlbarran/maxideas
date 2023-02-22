@@ -44,11 +44,12 @@ const CommonInput = ({ label, isRequired = true, ...rest }: Props) => {
             </FormLabel>
             <InputGroup>
               <Input
-                type={show ? "text" : "password"}                
                 variant="Filled"
                 fontFamily={"roboto"}
                 bgColor={"whiteAlpha.700"}
                 _placeholder={{ color: "#999", fontFamily: "roboto" }}
+                {...rest}
+                type={show ? "text" : "password"}                
               />
               <InputRightElement p="0" mr="1">
                 <Button

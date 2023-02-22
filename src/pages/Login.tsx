@@ -1,57 +1,89 @@
-import {
-  Avatar,
-  Box,
-  Button,
-  Container,
-  Heading,
-  HStack,
-  Text,
-  VStack,
-} from "@chakra-ui/react";
+import { Container, HStack, Text, VStack, useToast } from "@chakra-ui/react";
+import { ChangeEvent, FormEvent, useState } from "react";
+import { Link, Navigate } from "react-router-dom";
 
 import CommonInput from "../components/common/input/input";
+import Formulary from "../components/Formulary";
+
+import { auth } from "../config/firebase";
+import { signInWithEmailAndPassword } from "firebase/auth";
+
+type User = {
+  email: string;
+  password: string;
+};
 
 const Login = () => {
+  const toast = useToast();
+  const [user, setUser] = useState<User>({ email: "", password: "" });
+  const [isUser, setIsUser] = useState(false);
+
+  const handleSubmit = async (e: FormEvent) => {
+    e.preventDefault();
+
+    try {
+      await signInWithEmailAndPassword(auth, user.email, user.password);
+      toast({
+        title: "Bienvenido!",
+        status: "success",
+        isClosable: true,
+        position: "top",
+        duration: 2000,
+      });
+
+      setIsUser(true);
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
+  const handleChange = (e: ChangeEvent) => {
+    const { target } = e;
+
+    setUser({ ...user, [target.name]: target.value });
+  };
 
   return (
     <Container minW="100%" minH="100vh" display={"grid"} placeContent="center">
-      <VStack align="center" spacing="3" mb="4">
-        <Avatar size="lg" bg="blue.700" />
-        <Heading size="md" textTransform={"uppercase"}>
-          User Login
-        </Heading>
-      </VStack>
-      <Box
-        minW="sm"
-        bgColor="lightBgColor"
-        display={"flex"}
-        flexDir="column"
-        p={4}
-        borderRadius={"md"}
-        gap="20px"
+      <Formulary
+        title="Login"
+        buttonLabel="Login"
+        onSubmit={(event) => handleSubmit(event)}
       >
-        <CommonInput
-          label="Email"
-          type="email"
-        />
-        <CommonInput 
-          label="Contraseña"
-          type="password"
-        />
+        <VStack spacing="3">
+          <CommonInput
+            label="Email"
+            type="email"
+            isRequired={false}
+            name="email"
+            value={user.email}
+            onChange={(event) => handleChange(event)}
+          />
+          <CommonInput
+            label="Contraseña"
+            type="password"
+            isRequired={false}
+            name="password"
+            value={user.password}
+            onChange={(event) => handleChange(event)}
+          />
+        </VStack>
 
-        <Button bgColor={"blue.700"} _hover={{ bgColor: "blue.700" }}>
-          Login
-        </Button>
-
-        <HStack my="2" align="center">
+        <HStack align="center" justify={"center"} py="1" my="5">
           <Text color="#999" fontSize="sm">
             Aun no tienes una cuenta?
           </Text>
-          <Text color="blue.700" fontSize="md">
-            Registrate!
+          <Text
+            color="blue.700"
+            fontSize="md"
+            _hover={{ textDecorationLine: "underline" }}
+          >
+            <Link to="auth">Registrate!</Link>
           </Text>
         </HStack>
-      </Box>
+      </Formulary>
+
+      {isUser && <Navigate to="/home" />}
     </Container>
   );
 };
