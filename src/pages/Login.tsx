@@ -1,12 +1,19 @@
-import { Container, HStack, Text, VStack, useToast } from "@chakra-ui/react";
+import {
+  Container,
+  HStack,
+  Text,
+  VStack,
+  useToast,
+  Spinner,
+} from "@chakra-ui/react";
 import { ChangeEvent, FormEvent, useState } from "react";
-import { Link, Navigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 import CommonInput from "../components/common/input/input";
 import Formulary from "../components/Formulary";
 
 import { auth } from "../config/firebase";
-import { signInWithEmailAndPassword } from "firebase/auth";
+import { AuthError, signInWithEmailAndPassword } from "firebase/auth";
 
 type User = {
   email: string;
@@ -14,26 +21,40 @@ type User = {
 };
 
 const Login = () => {
-  const toast = useToast();
+  const navigate = useNavigate();
   const [user, setUser] = useState<User>({ email: "", password: "" });
-  const [isUser, setIsUser] = useState(false);
+  const [loading, setLoading] = useState(false);
+
+  const toast = useToast();
+
+  const setToast = (st: string, message: string) => {
+    toast({
+      title: message,
+      status: st == "error" ? "error" : "success",
+      isClosable: true,
+      position: "top",
+      duration: 2000,
+    });
+  };
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
-
     try {
+      setLoading(true);
       await signInWithEmailAndPassword(auth, user.email, user.password);
-      toast({
-        title: "Bienvenido!",
-        status: "success",
-        isClosable: true,
-        position: "top",
-        duration: 2000,
-      });
+      setToast("success", "Bienvenido");
 
-      setIsUser(true);
-    } catch (e) {
-      console.log(e);
+      navigate("/home");
+      setLoading(false);
+    } catch (err) {
+      const e = err as AuthError;
+      const message =
+        e.code == "auth/wrong-password"
+          ? "Contraseña incorrecta"
+          : "Usuario no encontrado, verifique su direccion de correo";
+
+      setToast("error", message);
+      setLoading(false);
     }
   };
 
@@ -45,45 +66,50 @@ const Login = () => {
 
   return (
     <Container minW="100%" minH="100vh" display={"grid"} placeContent="center">
-      <Formulary
-        title="Login"
-        buttonLabel="Login"
-        onSubmit={(event) => handleSubmit(event)}
-      >
-        <VStack spacing="3">
-          <CommonInput
-            label="Email"
-            type="email"
-            isRequired={false}
-            name="email"
-            value={user.email}
-            onChange={(event) => handleChange(event)}
-          />
-          <CommonInput
-            label="Contraseña"
-            type="password"
-            isRequired={false}
-            name="password"
-            value={user.password}
-            onChange={(event) => handleChange(event)}
-          />
-        </VStack>
-
-        <HStack align="center" justify={"center"} py="1" my="5">
-          <Text color="#999" fontSize="sm">
-            Aun no tienes una cuenta?
-          </Text>
-          <Text
-            color="blue.700"
-            fontSize="md"
-            _hover={{ textDecorationLine: "underline" }}
+      {loading ? (
+        <Spinner />
+      ) : (
+        <>
+          {" "}
+          <Formulary
+            title="Login"
+            buttonLabel="Login"
+            onSubmit={(event) => handleSubmit(event)}
           >
-            <Link to="auth">Registrate!</Link>
-          </Text>
-        </HStack>
-      </Formulary>
+            <VStack spacing="3">
+              <CommonInput
+                label="Email"
+                type="email"
+                isRequired={false}
+                name="email"
+                value={user.email}
+                onChange={(event) => handleChange(event)}
+              />
+              <CommonInput
+                label="Contraseña"
+                type="password"
+                isRequired={false}
+                name="password"
+                value={user.password}
+                onChange={(event) => handleChange(event)}
+              />
+            </VStack>
 
-      {isUser && <Navigate to="/home" />}
+            <HStack align="center" justify={"center"} py="1" my="5">
+              <Text color="#999" fontSize="sm">
+                Aun no tienes una cuenta?
+              </Text>
+              <Text
+                color="blue.700"
+                fontSize="md"
+                _hover={{ textDecorationLine: "underline" }}
+              >
+                <Link to="auth">Registrate!</Link>
+              </Text>
+            </HStack>
+          </Formulary>
+        </>
+      )}
     </Container>
   );
 };
