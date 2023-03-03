@@ -1,4 +1,4 @@
-import { onAuthStateChanged } from "firebase/auth";
+import { onAuthStateChanged, User } from "firebase/auth";
 import { ReactNode, useEffect, useState } from "react";
 import { auth } from "../config/firebase";
 import { AuthContext } from "./AuthContext";
@@ -9,16 +9,20 @@ type Props = {
 
 export const AuthProvider = ({children}: Props) => {
 
-  const [isUserActive, setisUserActive] = useState(false);
+  const [userData, setUserData] = useState<User | null>(null)
 
   useEffect(()=>{
     onAuthStateChanged(auth, user => {
-      user? setisUserActive(true) : setisUserActive(false);
-    })
+      if(user){
+        setUserData(user);
+      }else{
+        setUserData(null);
+      }
+    })    
   },[])
 
   return (
-    <AuthContext.Provider value={{isUserActive}}>
+    <AuthContext.Provider value={{userData}}>
       {children}
     </AuthContext.Provider>
   )
