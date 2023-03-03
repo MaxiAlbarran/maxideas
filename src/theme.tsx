@@ -7,12 +7,10 @@ const fonts = {
 };
 
 const colors = {
-  lightBgColor: "#F2F2F2",  
-  lightTextColor: "#F5F5FA",
-  darkTextColor: "#1A1313"
-//   blue: #457cf6 || #a5bff8
-//   orange: #FFAB2F || #fab16d
-//   gray: #c1c1c1 || #999
+  container: "#fefefe",
+  green: "#113e21",
+  brown: "#b38b59",
+  darkText: "#0c0c0f"
 };
 
 const breakpoints = {
@@ -26,13 +24,21 @@ const breakpoints = {
 const components = {
     Heading: {
         baseStyle: {
-            fontFamily: 'montserrat'
+            fontFamily: 'montserrat',
+            color: 'darkText'
         }
     },
     Text:{
         baseStyle: {
             fontFamily: 'roboto',
-            fontWeight: '500'
+            fontWeight: '400',
+            color:'darkText'
+        }
+    },
+    Button:{
+        baseStyle: {
+            color: '#fff',
+            size: 'md',
         }
     }
 }
@@ -44,7 +50,7 @@ const theme = extendTheme({
   styles:{
     global:{
         body:{
-            bg: "#333",
+            bg: "#f0f0f0",
         }
     }
   },
