@@ -1,91 +1,72 @@
-import {
-  Container,
-  VStack,
-  HStack,
-  Text,
-  useToast,
-  Spinner,
-} from "@chakra-ui/react";
-import { ChangeEvent, FormEvent, useState } from "react";
+import { Container, VStack, HStack, Text } from "@chakra-ui/react";
+import { FormEvent } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import CommonInput from "../components/common/input/input";
-import Formulary from "../components/Formulary";
 
-import { auth } from "../config/firebase";
-import {
-  AuthError,
-  createUserWithEmailAndPassword,
-  updateProfile,
-} from "firebase/auth";
+import CommonInput from "../components/common/input/input";
+import CommonSpinner from "../components/common/spinner/spinner";
+import Formulary from "../components/common/formBox/formBox";
+
+import { useForm } from "../hooks/Form/useForm";
+import { useCreateUser } from "../hooks/Create/useCreateUser";
+import { useShowToast } from "../hooks/Toast/useShowToast";
 
 type NewUser = {
   name: string;
   surname: string;
+  username: string;
   email: string;
   password: string;
 };
 
 const Registration = () => {
   const navigate = useNavigate();
-  const [user, setUser] = useState<NewUser>({
+
+  const { form, handleChange } = useForm<NewUser>({
     name: "",
     surname: "",
+    username: "",
     email: "",
     password: "",
   });
-  const [loading, setLoading] = useState(false);
 
-  const toast = useToast();
+  const { createNewUser, loading } = useCreateUser();
 
-  const setToast = (st: string, message: string) => {
-    toast({
-      title: message,
-      status: st == "error" ? "error" : "success",
-      isClosable: true,
-      position: "top",
-      duration: 2000,
-    });
-  };
+  const { showToast } = useShowToast();
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
-    try {
-      setLoading(true);
-      const newUser = await createUserWithEmailAndPassword(
-        auth,
-        user.email,
-        user.password
-      );
+    const newUserData = {
+      email: form.email,
+      password: form.password,
+      displayName: form.name + " " + form.surname,
+      username: form.username,
+    };
 
-      updateProfile(newUser.user, {
-        displayName: user.name + " " + user.surname,
-      });
+    const isError = await createNewUser(newUserData);
 
-      setToast("success", "Registro exitoso!");
-
-      navigate("/");
-    } catch (err) {
-      const e = err as AuthError;
-      const message =
-        e.code == "auth/weak-password"
-          ? "La contraseña debe contener al menos 6 caracteres"
-          : "Direccion de correo electronico en uso";
-
-      setToast("error", message);
-      setLoading(false);
+    if(isError){
+      showToast({
+        st: "error",
+        label: "Registro erroneo, verifique los datos ingresados",
+    })}else{
+      showToast({
+        st:"success",
+        label: "Registro exitoso"
+      })
+      navigate("/home")
     }
   };
 
-  const handleChange = (e: ChangeEvent) => {
-    const { target } = e;
-
-    setUser({ ...user, [target.name]: target.value });
-  };
-
   return (
-    <Container minW="100%" minH="100vh" display={"grid"} placeContent="center">
+    <Container
+      minW={"container.lg"}
+      display="flex"
+      justifyContent={"center"}
+      mt="24"
+      py={"6"}
+    >
       {loading ? (
-        <Spinner />
+        <CommonSpinner />
       ) : (
         <>
           <Formulary
@@ -99,7 +80,7 @@ const Registration = () => {
                   label="Nombre"
                   type="text"
                   name="name"
-                  value={user?.name}
+                  value={form?.name}
                   onChange={(event) => handleChange(event)}
                 />
                 <CommonInput
@@ -107,23 +88,30 @@ const Registration = () => {
                   isRequired={false}
                   type="text"
                   name="surname"
-                  value={user?.surname}
+                  value={form?.surname}
                   onChange={(event) => handleChange(event)}
                 />
               </HStack>
 
               <CommonInput
+                label="Nombre de usuario"
+                type="text"
+                name="username"
+                value={form?.username}
+                onChange={(event) => handleChange(event)}
+              />
+              <CommonInput
                 label="Email"
                 type="email"
                 name="email"
-                value={user?.email}
+                value={form?.email}
                 onChange={(event) => handleChange(event)}
               />
               <CommonInput
                 label="Contraseña"
                 type="password"
                 name="password"
-                value={user?.password}
+                value={form?.password}
                 onChange={(event) => handleChange(event)}
                 placeholder="Debe contener al menos 6 caracteres"
               />
