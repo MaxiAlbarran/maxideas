@@ -1,4 +1,5 @@
 import { createBrowserRouter } from "react-router-dom";
+import Catch from "./pages/Catch";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
 import PublicLayout from "./pages/PublicLayout";
@@ -9,6 +10,7 @@ export const getRouter = () =>
     {
       path: "/",
       element: <PublicLayout />,
+      errorElement: <Catch/>,
       children: [
         {
           index: true,
