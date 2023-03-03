@@ -6,7 +6,7 @@ import {
   HStack,
   Button,
 } from "@chakra-ui/react";
-import {  signOut } from "firebase/auth";
+import { signOut } from "firebase/auth";
 import { useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { auth } from "../../../config/firebase";
@@ -15,7 +15,7 @@ import { AuthContext } from "../../../context/AuthContext";
 const Navbar = () => {
   const navigate = useNavigate();
 
-  const {isUserActive} = useContext(AuthContext); 
+  const { userData } = useContext(AuthContext);
 
   const logOut = async () => {
     try {
@@ -38,17 +38,19 @@ const Navbar = () => {
         py={2}
       >
         <VStack spacing={0} fontFamily={"murecho"}>
-          <HStack spacing={0} fontFamily="murecho" p={0}>
-            <Heading color="whiteAlpha.700">Max</Heading>
-            <Heading color="red.700">Ideas</Heading>
-          </HStack>
-          <Text color="whiteAlpha.400" fontFamily={"murecho"} lineHeight="0.6">
+          <Link to="/home">
+            <HStack spacing={0} fontFamily="murecho" p={0}>
+              <Heading color="green">Max</Heading>
+              <Heading color="brown">Ideas</Heading>
+            </HStack>
+          </Link>
+          <Text color="darkText" fontFamily={"murecho"} lineHeight="0.6">
             Expresate 🧠
           </Text>
         </VStack>
-        {isUserActive ? (
+        {userData ? (
           <>
-            <Button onClick={logOut} colorScheme="red">
+            <Button onClick={logOut} bgColor="red.600" size="sm" _hover={{bgColor:"red.700"}}>
               Cerrar sesion
             </Button>
           </>
@@ -56,12 +58,12 @@ const Navbar = () => {
           <>
             <HStack>
               <Link to="/">
-                <Button size="sm" colorScheme={"blue"}>
+                <Button size="sm" bgColor="blue.700" _hover={{bgColor:"blue.800"}}>
                   Inicia sesion
                 </Button>
               </Link>
               <Link to="/auth">
-                <Button size="sm" colorScheme={"blue"}>
+                <Button size="sm" bgColor="blue.700" _hover={{bgColor:"blue.800"}}>
                   Registrate
                 </Button>
               </Link>

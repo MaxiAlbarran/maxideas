@@ -10,7 +10,7 @@ import {
 import { useState } from "react";
 
 type Props = InputProps & {
-  label: string;
+  label?: string;
   isRequired?: boolean;
 };
 
@@ -19,7 +19,7 @@ const CommonInput = ({ label, isRequired = true, ...rest }: Props) => {
 
   return (
     <>
-      <FormControl color="darkTextColor" isRequired={isRequired}>
+      <FormControl color="darkText" isRequired={isRequired}>
         {rest.type != "password" ? (
           <>
             <FormLabel fontSize={"lg"} fontFamily={"roboto"}>
@@ -28,7 +28,7 @@ const CommonInput = ({ label, isRequired = true, ...rest }: Props) => {
             <Input
               variant="Filled"
               fontFamily={"roboto"}
-              bgColor={"whiteAlpha.700"}
+              bgColor={"#f0f0f0"}
               _placeholder={{
                 color: "#999",
                 fontFamily: "roboto",
@@ -46,7 +46,7 @@ const CommonInput = ({ label, isRequired = true, ...rest }: Props) => {
               <Input
                 variant="Filled"
                 fontFamily={"roboto"}
-                bgColor={"whiteAlpha.700"}
+                bgColor={"#f0f0f0"}
                 _placeholder={{ color: "#999", fontFamily: "roboto" }}
                 {...rest}
                 type={show ? "text" : "password"}                
@@ -54,9 +54,8 @@ const CommonInput = ({ label, isRequired = true, ...rest }: Props) => {
               <InputRightElement p="0" mr="1">
                 <Button
                   onClick={() => setShow(!show)}
-                  bgColor="blue.700"
-                  color="lightTextColor"
-                  _hover={{ bgColor: "blue.700" }}
+                  bgColor="brown"
+                  _hover={{ bgColor: "#652B19" }}
                   size="sm"
                 >
                   {show ? "Hide" : "Show"}
