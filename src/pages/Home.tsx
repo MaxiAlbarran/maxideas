@@ -79,7 +79,7 @@ const Home = () => {
 
             <Flex width="100%" bgColor="container">
               <PostBox
-                avatar={user?.photoURL}
+                avatar={user?.avatar}
                 displayName={user?.displayName}
                 username={user?.username}
               />

@@ -1,6 +1,7 @@
 import { initializeApp } from "firebase/app";
-import { getAuth } from 'firebase/auth'
-import { getFirestore } from 'firebase/firestore'
+import { getAuth } from "firebase/auth";
+import { getFirestore } from "firebase/firestore";
+import { getStorage } from "firebase/storage";
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
@@ -9,10 +10,11 @@ const firebaseConfig = {
   projectId: "maxideas-c85ad",
   storageBucket: "maxideas-c85ad.appspot.com",
   messagingSenderId: "769393630971",
-  appId: "1:769393630971:web:864b52561e3b10a5c55a5e"
+  appId: "1:769393630971:web:864b52561e3b10a5c55a5e",
 };
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 export const auth = getAuth(app);
 export const db = getFirestore(app);
+export const storage = getStorage(app);

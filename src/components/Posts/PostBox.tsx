@@ -6,19 +6,22 @@ import {
   HStack,
   VStack,
   Text,
+  Input,
+  Stack,
 } from "@chakra-ui/react";
-import { FormEvent, useContext, useState, useEffect } from "react";
+import { FormEvent, useContext, useState, useEffect, ChangeEvent } from "react";
 import CommonInput from "../common/input/input";
 import { AuthContext } from "../../context/AuthContext";
 import { serverTimestamp } from "firebase/firestore";
 import { useForm } from "../../hooks/Form/useForm";
 import { useCreatePost } from "../../hooks/Create/useCreatePost";
 import { useShowToast } from "../../hooks/Toast/useShowToast";
+import CommonInputFile from "../common/input/inputFile";
 
 type Post = {
   userRef: string | undefined;
   text: string;
-  image: string;
+  image: File | null;
 };
 
 type Props = {
@@ -33,33 +36,40 @@ const PostBox = ({ avatar, displayName, username }: Props) => {
   const { form, handleChange, resetForm } = useForm<Post>({
     userRef: userData?.uid,
     text: "",
-    image: "",
+    image: null,
   });
 
   const [disabled, setDisabled] = useState(true);
+  const [file, setFile] = useState<File | null>();
 
   const createPost = useCreatePost("posts");
   const { showToast } = useShowToast();
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
-    const isError = await createPost({ ...form, createdAt: serverTimestamp() });
+
+    const isError = await createPost({
+      ...form,
+      image: file,
+      createdAt: serverTimestamp(),
+    });
 
     if (isError) {
       showToast({ st: "error", label: "Ha ocurrido un error!" });
     } else {
       resetForm();
+      setFile(null);
       showToast({ st: "success", label: "Publicacion exitosa" });
     }
   };
 
   useEffect(() => {
-    if (form.text.length > 0 || form.image.length > 0) {
+    if (form.text.length > 0 || file) {
       setDisabled(false);
     } else {
       setDisabled(true);
     }
-  }, [form.text, form.image]);
+  }, [form.text, file]);
 
   return (
     <Box width="100%">
@@ -84,7 +94,7 @@ const PostBox = ({ avatar, displayName, username }: Props) => {
           minW="100%"
           px={14}
           spacing={4}
-          align="flex-end"
+          align="flex-start"
           onSubmit={(e) => handleSubmit(e)}
         >
           <CommonInput
@@ -96,23 +106,21 @@ const PostBox = ({ avatar, displayName, username }: Props) => {
             onChange={(e) => handleChange(e)}
             isRequired={false}
           />
-          <CommonInput
-            type="text"
-            label="Quieres postear una imagen?"
-            placeholder="URL"
-            name="image"
-            value={form.image}
-            onChange={(e) => handleChange(e)}
-            isRequired={false}
-          />
-          <Button
-            type="submit"
-            bgColor="green"
-            _hover={{ bgColor: "#22543D" }}
-            isDisabled={disabled}
-          >
-            Postear
-          </Button>
+          <HStack>
+            <CommonInputFile handleFile={setFile} />
+
+            {file ? <Text>{file.name}</Text> : ""}
+          </HStack>
+          <HStack width="100%" justify="flex-end">
+            <Button
+              type="submit"
+              bgColor="green"
+              _hover={{ bgColor: "#22543D" }}
+              isDisabled={disabled}
+            >
+              Postear
+            </Button>
+          </HStack>
         </VStack>
       </VStack>
     </Box>

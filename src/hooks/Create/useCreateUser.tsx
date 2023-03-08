@@ -19,8 +19,6 @@ export const useCreateUser = () => {
         try{
             setLoading(true)
             const newUser = await createUserWithEmailAndPassword(auth, email, password);
-            
-            await updateProfile(newUser.user, {displayName: displayName});
 
             await setDoc(doc(db, 'users', newUser.user.uid), {
                 displayName: displayName,

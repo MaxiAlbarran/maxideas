@@ -6,6 +6,8 @@ import {
   Container,
   Stack,
   Button,
+  VStack,
+  Text
 } from "@chakra-ui/react";
 import { FormEvent, useContext, useEffect, useState } from "react";
 import { AuthContext } from "../context/AuthContext";
@@ -13,9 +15,9 @@ import { useForm } from "../hooks/Form/useForm";
 import { useShowToast } from "../hooks/Toast/useShowToast";
 import { useUpdateUser } from "../hooks/Update/useUpdateUser";
 import CommonInput from "./common/input/input";
+import CommonInputFile from "./common/input/inputFile";
 
 type Form = {
-  avatar: string;
   profileDescription: string;
   username: string;
   displayName: string;
@@ -27,7 +29,6 @@ type Props = {
 
 const ProfileSettings = ({ onClose }: Props) => {
   const { form, handleChange } = useForm<Form>({
-    avatar: "",
     displayName: "",
     username: "",
     profileDescription: "",
@@ -40,6 +41,7 @@ const ProfileSettings = ({ onClose }: Props) => {
   const { showToast } = useShowToast();
 
   const [isDisabled, setIsDisabled] = useState(true);
+  const [file, setFile] = useState<File | null | undefined>();
 
   const showOptions = (title: string, name: string, value: string) => {
     return (
@@ -65,11 +67,6 @@ const ProfileSettings = ({ onClose }: Props) => {
 
   const inputFields = [
     {
-      label: "Avatar",
-      value: form.avatar,
-      name: "avatar",
-    },
-    {
       label: "Nombre de usuario",
       value: form.username,
       name: "username",
@@ -90,7 +87,7 @@ const ProfileSettings = ({ onClose }: Props) => {
     e.preventDefault();
 
     const isError = updateUser({
-      avatar: form.avatar,
+      avatar: file,
       displayName: form.displayName,
       profileDescription: form.profileDescription,
       username: form.username,
@@ -109,18 +106,17 @@ const ProfileSettings = ({ onClose }: Props) => {
 
   useEffect(() => {
     const sum =
-      form.avatar.length +
       form.displayName.length +
       form.profileDescription.length +
-      form.username.length;
+      form.username.length
 
-    if (sum == 0) {
-      setIsDisabled(true);
-    } else {
+    if (file || sum > 0) {
       setIsDisabled(false);
+    } else {
+      setIsDisabled(true);
     }
 
-  }, [form]);
+  }, [form, file]);
 
   return (
     <Container
@@ -132,6 +128,13 @@ const ProfileSettings = ({ onClose }: Props) => {
       onSubmit={(e) => handleSubmit(e)}
     >
       <Flex flexDir="column" gap={"20px"}>
+        <VStack align={"flex-start"}>
+          <Heading fontSize={"lg"}>Avatar</Heading>
+          <HStack>
+          <CommonInputFile handleFile={setFile} />
+          {file ? <Text>{file.name}</Text> : ""}
+          </HStack>
+        </VStack>
         {inputFields.map((row, i) => (
           <Stack key={i}>{showOptions(row.label, row.name, row.value)}</Stack>
         ))}
