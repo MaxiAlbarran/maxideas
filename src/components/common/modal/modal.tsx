@@ -23,7 +23,7 @@ import {
       <>  
         <Modal isOpen={isOpen} onClose={onClose} size={size}>
           <ModalOverlay />
-          <ModalContent bg="#f0f0f0" border="none">
+          <ModalContent bg="#f0f0f0" border="none" p={0}>
             <ModalHeader color="darkText">{modalTitle}</ModalHeader>
             <ModalCloseButton color="darkText"/>
             <ModalBody>{children}</ModalBody>

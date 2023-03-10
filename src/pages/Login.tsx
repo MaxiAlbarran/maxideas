@@ -4,6 +4,7 @@ import {
   Text,
   VStack,
   useToast,
+  Flex,
 } from "@chakra-ui/react";
 import { FormEvent, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
@@ -16,6 +17,7 @@ import { AuthError, signInWithEmailAndPassword } from "firebase/auth";
 import CommonSpinner from "../components/common/spinner/spinner";
 import { useForm } from "../hooks/Form/useForm";
 import { useShowToast } from "../hooks/Toast/useShowToast";
+import Banner from "../components/Banner";
 
 type User = {
   email: string;
@@ -25,16 +27,16 @@ type User = {
 const Login = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
-  
-  const {showToast} = useShowToast();
-  const {form, handleChange} = useForm<User>({ email: "", password: "" })
+
+  const { showToast } = useShowToast();
+  const { form, handleChange } = useForm<User>({ email: "", password: "" });
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     try {
       setLoading(true);
       await signInWithEmailAndPassword(auth, form.email, form.password);
-      showToast({st: "success", label: "Bienvenido!"});
+      showToast({ st: "success", label: "Bienvenido!" });
 
       navigate("/home");
       setLoading(false);
@@ -45,24 +47,24 @@ const Login = () => {
           ? "Contraseña incorrecta"
           : "Usuario no encontrado, verifique su direccion de correo";
 
-      showToast({st: "error", label: message});
+      showToast({ st: "error", label: message });
       setLoading(false);
     }
   };
 
   return (
     <Container
-      minW="container.lg"
+      minW="100%"
       display="flex"
       justifyContent={"center"}
       py="6"
-      mt={"24"}
+      mt={{ sm: "10", lg: "24" }}
     >
       {loading ? (
         <CommonSpinner />
       ) : (
-        <>
-          {" "}
+        <Flex width="100%" direction={"column"} align="center">
+          <Banner />{" "}
           <Formulary
             title="Login"
             buttonLabel="Login"
@@ -89,18 +91,19 @@ const Login = () => {
 
             <HStack align="center" justify={"center"} py="1" my="5">
               <Text color="#999" fontSize="sm">
-                Aun no tienes una cuenta?
+                No tienes una cuenta?
               </Text>
               <Text
                 color="blue.800"
                 fontSize="md"
+                fontWeight={"bold"}
                 _hover={{ textDecorationLine: "underline" }}
               >
                 <Link to="auth">Registrate!</Link>
               </Text>
             </HStack>
           </Formulary>
-        </>
+        </Flex>
       )}
     </Container>
   );

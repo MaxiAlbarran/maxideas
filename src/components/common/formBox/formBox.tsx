@@ -10,11 +10,11 @@ type Props = BoxProps & {
 const Formulary = ({ title, buttonLabel, children, ...rest }: Props) => {
   return (
     <>
-      <Flex direction={"column"} gap="10px" align="flex-start" maxW="md">
-        <Heading size="lg" textAlign={"left"} color="darkText">{title}</Heading>
+      <Flex direction={"column"} gap="10px" align="flex-start" maxW="md" minW={{sm:"100%", md: "70%", lg:"50%"}}>
+        <Heading size={{sm:"md", lg: "lg"}} textAlign={"left"} color="darkText">{title}</Heading>
         <Box
           as="form"
-          width={"md"}
+          width={"100%"}
           bgColor="container"
           p={6}
           rounded={"2xl"}

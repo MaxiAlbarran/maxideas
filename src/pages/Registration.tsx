@@ -1,4 +1,4 @@
-import { Container, VStack, HStack, Text } from "@chakra-ui/react";
+import { Container, VStack, HStack, Text, Stack } from "@chakra-ui/react";
 import { FormEvent } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
@@ -44,27 +44,22 @@ const Registration = () => {
 
     const isError = await createNewUser(newUserData);
 
-    if(isError){
+    if (isError) {
       showToast({
         st: "error",
         label: "Registro erroneo, verifique los datos ingresados",
-    })}else{
+      });
+    } else {
       showToast({
-        st:"success",
-        label: "Registro exitoso"
-      })
-      navigate("/home")
+        st: "success",
+        label: "Registro exitoso",
+      });
+      navigate("/home");
     }
   };
 
   return (
-    <Container
-      minW={"container.lg"}
-      display="flex"
-      justifyContent={"center"}
-      mt="24"
-      py={"6"}
-    >
+    <Container minW="100%" display="flex" justifyContent={"center"} py={"6"} mt={{sm: "10", lg: "24"}}>
       {loading ? (
         <CommonSpinner />
       ) : (
@@ -75,7 +70,7 @@ const Registration = () => {
             onSubmit={(event) => handleSubmit(event)}
           >
             <VStack spacing="4">
-              <HStack>
+              <Stack direction={{sm:"column", md: "row"}} width="100%">
                 <CommonInput
                   label="Nombre"
                   type="text"
@@ -91,7 +86,7 @@ const Registration = () => {
                   value={form?.surname}
                   onChange={(event) => handleChange(event)}
                 />
-              </HStack>
+              </Stack>
 
               <CommonInput
                 label="Nombre de usuario"
@@ -113,7 +108,7 @@ const Registration = () => {
                 name="password"
                 value={form?.password}
                 onChange={(event) => handleChange(event)}
-                placeholder="Debe contener al menos 6 caracteres"
+                placeholder="De al menos 6 caracteres"
               />
             </VStack>
 
@@ -124,6 +119,7 @@ const Registration = () => {
               <Text
                 color="blue.700"
                 fontSize="md"
+                fontWeight={"bold"}
                 _hover={{ textDecorationLine: "underline" }}
               >
                 <Link to="/">Login!</Link>

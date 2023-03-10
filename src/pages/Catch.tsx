@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import { AuthContext } from "../context/AuthContext";
 
 const Catch = () => {
-  const { userData } = useContext(AuthContext);
+  const { userUid } = useContext(AuthContext);
   return (
     <Container margin="100px auto">
       <VStack p={4} align="flex-start" spacing={4}>
@@ -18,7 +18,7 @@ const Catch = () => {
           La pagina que estas buscando no existe, ha sido removida o se no se
           encuentra disponible por ahora
         </Text>
-        <Link to={userData ? "home" : "/"}>
+        <Link to={userUid ? "home" : "/"}>
           <Button size="md" colorScheme={"blue"}>
             Ve al inicio
           </Button>

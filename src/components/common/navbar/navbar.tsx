@@ -4,18 +4,29 @@ import {
   Heading,
   VStack,
   HStack,
-  Button,
+  Avatar,
+  Menu,
+  MenuButton,
+  MenuList,
+  MenuItem,
+  MenuDivider,
+  Show,
 } from "@chakra-ui/react";
 import { signOut } from "firebase/auth";
 import { useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { auth } from "../../../config/firebase";
 import { AuthContext } from "../../../context/AuthContext";
+import { useGetUserDataById } from "../../../hooks/Read/useGetUserDataById";
+
+import { ChevronDownIcon } from "@chakra-ui/icons";
 
 const Navbar = () => {
   const navigate = useNavigate();
 
-  const { userData } = useContext(AuthContext);
+  const { userUid } = useContext(AuthContext);
+
+  const { user, loading } = useGetUserDataById(userUid);
 
   const logOut = async () => {
     try {
@@ -27,52 +38,73 @@ const Navbar = () => {
     }
   };
 
-  return (
-    <Container minW="100%">
+  if (userUid) {
+    return (
       <Container
-        maxW="container.lg"
+        maxW={{sm: "100%", lg: "container.lg"}}
         display={"flex"}
         flexDirection="row"
         alignItems="center"
         justifyContent={"space-between"}
         py={2}
       >
-        <VStack spacing={0} fontFamily={"murecho"}>
+        <VStack spacing={0}>
           <Link to="/home">
             <HStack spacing={0} fontFamily="murecho" p={0}>
-              <Heading color="green">Max</Heading>
-              <Heading color="brown">Ideas</Heading>
+              <Heading color="green" fontSize={{ sm: "md", md: "lg", lg: "3xl" }}>
+                Max
+              </Heading>
+              <Heading color="brown" fontSize={{ sm: "md", md: "lg", lg: "3xl" }}>
+                Ideas
+              </Heading>
             </HStack>
           </Link>
-          <Text color="darkText" fontFamily={"murecho"} lineHeight="0.6">
-            Expresate 🧠
-          </Text>
+          <Show breakpoint="(min-width: 700px)">
+            <Text
+              color="darkText"
+              fontFamily={"murecho"}
+              lineHeight="0.6"
+              fontSize={{ sm: "xs", md: "md", lg: "xl" }}
+            >
+              Expresate 🧠
+            </Text>
+          </Show>
         </VStack>
-        {userData ? (
-          <>
-            <Button onClick={logOut} bgColor="red.600" size="sm" _hover={{bgColor:"red.700"}}>
-              Cerrar sesion
-            </Button>
-          </>
-        ) : (
-          <>
+
+        <Menu>
+          <MenuButton bgColor={"container"} p={1} borderRadius={"md"}>
             <HStack>
-              <Link to="/">
-                <Button size="sm" bgColor="blue.700" _hover={{bgColor:"blue.800"}}>
-                  Inicia sesion
-                </Button>
-              </Link>
-              <Link to="/auth">
-                <Button size="sm" bgColor="blue.700" _hover={{bgColor:"blue.800"}}>
-                  Registrate
-                </Button>
-              </Link>
+              <Avatar size="sm" src={user?.avatar} name={user?.displayName} />
+              <Show breakpoint="(min-width: 700px)">
+              <Heading size="xs" color="darkText">
+                {user?.displayName} 
+              </Heading>
+              </Show>
+              <ChevronDownIcon boxSize={"5"} color="#000"/>
             </HStack>
-          </>
-        )}
+          </MenuButton>
+          <MenuList>
+            <MenuItem as={Link} to={`home`}>
+              Inicio
+            </MenuItem>
+            <MenuItem as={Link} to={`user/${userUid}`}>
+              Mi perfil
+            </MenuItem>
+            <MenuDivider />
+            <MenuItem
+              transition=".1s linear"
+              onClick={logOut}
+              _hover={{ bgColor: "red.700" }}
+            >
+              Cerrar sesion
+            </MenuItem>
+          </MenuList>
+        </Menu>
       </Container>
-    </Container>
-  );
+    );
+  } else {
+    return <></>;
+  }
 };
 
 export default Navbar;

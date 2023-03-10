@@ -9,7 +9,7 @@ const CommonInputFile = ({handleFile}:Props) => {
   return (
       <Stack bgColor="brown" position="relative" p={2} borderRadius="lg">
         <Heading fontSize={"sm"} color="white">
-          Añadir Imagen
+          Imagen
         </Heading>
         <Input
           type="file"

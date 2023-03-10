@@ -34,9 +34,9 @@ const ProfileSettings = ({ onClose }: Props) => {
     profileDescription: "",
   });
 
-  const { userData } = useContext(AuthContext);
+  const { userUid } = useContext(AuthContext);
 
-  const { updateUser } = useUpdateUser(userData!);
+  const { updateUser } = useUpdateUser(userUid!);
 
   const { showToast } = useShowToast();
 
@@ -48,7 +48,7 @@ const ProfileSettings = ({ onClose }: Props) => {
       <>
         <Box>
           <Flex direction="column">
-            <Heading fontSize="lg">{title}</Heading>
+            <Heading fontSize={{sm:"sm", md:"lg"}}>{title}</Heading>
             <HStack spacing={4} align="flex-end">
               <CommonInput
                 placeholder={`Nuevo ${title}`}
@@ -129,7 +129,7 @@ const ProfileSettings = ({ onClose }: Props) => {
     >
       <Flex flexDir="column" gap={"20px"}>
         <VStack align={"flex-start"}>
-          <Heading fontSize={"lg"}>Avatar</Heading>
+          <Heading fontSize={{sm:"sm", md:"lg"}}>Avatar</Heading>
           <HStack>
           <CommonInputFile handleFile={setFile} />
           {file ? <Text>{file.name}</Text> : ""}

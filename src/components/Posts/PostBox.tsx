@@ -1,15 +1,14 @@
 import {
   Avatar,
   Box,
-  Button,
   Heading,
   HStack,
   VStack,
   Text,
-  Input,
-  Stack,
+  IconButton,
+  Flex,
 } from "@chakra-ui/react";
-import { FormEvent, useContext, useState, useEffect, ChangeEvent } from "react";
+import { FormEvent, useContext, useState, useEffect } from "react";
 import CommonInput from "../common/input/input";
 import { AuthContext } from "../../context/AuthContext";
 import { serverTimestamp } from "firebase/firestore";
@@ -18,8 +17,10 @@ import { useCreatePost } from "../../hooks/Create/useCreatePost";
 import { useShowToast } from "../../hooks/Toast/useShowToast";
 import CommonInputFile from "../common/input/inputFile";
 
+import { AddIcon } from "@chakra-ui/icons";
+
 type Post = {
-  userRef: string | undefined;
+  userRef: string | null;
   text: string;
   image: File | null;
 };
@@ -31,10 +32,10 @@ type Props = {
 };
 
 const PostBox = ({ avatar, displayName, username }: Props) => {
-  const { userData } = useContext(AuthContext);
+  const { userUid } = useContext(AuthContext);
 
   const { form, handleChange, resetForm } = useForm<Post>({
-    userRef: userData?.uid,
+    userRef: userUid,
     text: "",
     image: null,
   });
@@ -73,56 +74,57 @@ const PostBox = ({ avatar, displayName, username }: Props) => {
 
   return (
     <Box width="100%">
-      <VStack p={6} pb={3}>
-        <HStack minW="100%" spacing={3}>
+      <Flex direction="row" p={3}>
+        <VStack pr={{ sm: "1", md: "2" }}>
           <Avatar
             src={avatar ? avatar : ""}
             name={displayName ? displayName : "Unknown"}
-            size="md"
+            size={{ sm: "sm", md: "md" }}
           />
+        </VStack>
+        <VStack align={"flex-start"} pl={0} pr={{sm:"0", md: "10", lg: "14"}} pt={2} width="100%">
           <HStack spacing={1} align="flex-start">
-            <Heading size="sm" color="darkText">
+            <Heading size={{ sm: "xs", md: "sm" }} color="darkText" textOverflow={"ellipsis"}>
               {displayName}
             </Heading>
-            <Text fontSize={"sm"} color="gray">
+            <Text fontSize={{ sm: "xs", md: "sm" }} color="gray">
               @{username}
             </Text>
           </HStack>
-        </HStack>
-        <VStack
-          as="form"
-          minW="100%"
-          px={14}
-          spacing={4}
-          align="flex-start"
-          onSubmit={(e) => handleSubmit(e)}
-        >
-          <CommonInput
-            type="text"
-            label="En que estas pensando?"
-            placeholder="Hoy me siento genial!"
-            name="text"
-            value={form.text}
-            onChange={(e) => handleChange(e)}
-            isRequired={false}
-          />
-          <HStack>
-            <CommonInputFile handleFile={setFile} />
-
-            {file ? <Text>{file.name}</Text> : ""}
-          </HStack>
-          <HStack width="100%" justify="flex-end">
-            <Button
-              type="submit"
-              bgColor="green"
-              _hover={{ bgColor: "#22543D" }}
-              isDisabled={disabled}
-            >
-              Postear
-            </Button>
-          </HStack>
+          <VStack
+            as="form"
+            minW="100%"
+            spacing={4}
+            align="flex-start"
+            onSubmit={(e) => handleSubmit(e)}
+          >
+            <CommonInput
+              type="text"
+              label="En que estas pensando?"
+              placeholder="Hoy me siento genial!"
+              name="text"
+              value={form.text}
+              onChange={(e) => handleChange(e)}
+              isRequired={false}
+            />
+            <HStack justify={"space-between"} width="100%">
+              <HStack>
+                <CommonInputFile handleFile={setFile} />
+                {file ? <Text>{file.name}</Text> : ""}
+              </HStack>
+              <IconButton
+                aria-label="Make a post"
+                icon={<AddIcon />}
+                type="submit"
+                bgColor="green"
+                _hover={{ bgColor: "#22543D" }}
+                size={{sm:"sm", md: "md"}}
+                isDisabled={disabled}
+              />
+            </HStack>
+          </VStack>
         </VStack>
-      </VStack>
+      </Flex>
     </Box>
   );
 };
