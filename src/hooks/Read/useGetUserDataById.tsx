@@ -1,34 +1,25 @@
 import {
-  collection,
   doc,
   DocumentData,
-  getDocs,
   onSnapshot,
-  query,
-  where,
 } from "firebase/firestore";
 import { useEffect, useState } from "react";
 import { db } from "../../config/firebase";
 
-type User = {
-  avatar: string;
-  displayName: string;
-  username: string;
-  profileDescription: string;
-  userRef: string;
-  email: string;
-};
-
-export const useGetUserDataById = (id: string | undefined) => {
+export const useGetUserDataById = (id: string | null) => {
   const [loading, setLoading] = useState(false);
-  const [user, setUser] = useState<DocumentData>();
+  const [user, setUser] = useState<DocumentData | null>();
 
   const getUser = async () => {
     try {
       setLoading(true);
       if (id) {
         onSnapshot(doc(db, "users", id), (doc) => {
-          setUser(doc.data());
+          if(doc){
+            setUser(doc.data());
+          }else{
+            setUser(null)
+          }
         });
         setLoading(false);
       }

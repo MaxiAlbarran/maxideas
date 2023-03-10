@@ -11,15 +11,15 @@ type UserProps = {
     username?: string
 }
 
-export const useUpdateUser = (userToUpdate: User) => {
+export const useUpdateUser = (userToUpdateId: string) => {
 
-    const {user} = useGetUserDataById(userToUpdate.uid)
+    const {user} = useGetUserDataById(userToUpdateId)
 
 
     const updateUser = async ({avatar, displayName, profileDescription, username}:UserProps) => {
         let isError: boolean = false;
         try{
-            const docRef = doc(db, "users", userToUpdate.uid)
+            const docRef = doc(db, "users", userToUpdateId)
             await updateDoc(docRef, {
                 displayName: displayName?.length? displayName: user?.displayName,
                 profileDescription: profileDescription?.length? profileDescription : user?.profileDescription,
@@ -27,7 +27,7 @@ export const useUpdateUser = (userToUpdate: User) => {
             })
 
             if(avatar){
-                const storageRef = ref(storage, `users/${userToUpdate.uid}`);
+                const storageRef = ref(storage, `users/${userToUpdateId}`);
                 await uploadBytes(storageRef, avatar);
                 const URL = await getDownloadURL(storageRef);
 

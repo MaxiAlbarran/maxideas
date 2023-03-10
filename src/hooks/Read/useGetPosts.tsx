@@ -1,37 +1,40 @@
 import {
   collection,
   DocumentData,
-  getDocs,
   onSnapshot,
   orderBy,
   query,
-  QueryDocumentSnapshot,
 } from "firebase/firestore";
 import { useEffect, useState } from "react";
 import { db } from "../../config/firebase";
 
 export const useGetPosts = () => {
   const [posts, setPosts] = useState<DocumentData[]>();
+  const [loadingPosts, setLoadingPosts] = useState(false)
+  
 
   useEffect(() => {
     const getPosts = async () => {
       try {
+        setLoadingPosts(true)
         const q = query(collection(db, "posts"), orderBy("createdAt", "desc"));
-
-        await onSnapshot(q, (querySnapshot) => {
+        onSnapshot(q, (querySnapshot) => {
           const posts: DocumentData[] = [];
           querySnapshot.forEach((doc) => {
-            posts.push(doc.data());
+            posts.push({...doc.data(), id: doc.id});
           });
 
           setPosts(posts);
         });
+
+        setLoadingPosts(false);
       } catch (e) {
         console.log(e);
+        setLoadingPosts(false);
       }
     };
     getPosts();
   }, []);
 
-  return { posts };
+  return { posts, loadingPosts };
 };

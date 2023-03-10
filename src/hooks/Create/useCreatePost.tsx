@@ -3,13 +3,13 @@ import {
   collection,
   doc,
   FieldValue,
-  setDoc,
+  updateDoc,
 } from "firebase/firestore";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { db, storage } from "../../config/firebase";
 
 type Post = {
-  userRef: string | undefined;
+  userRef: string | null;
   text: string;
   image: File | null | undefined;
   createdAt: FieldValue;
@@ -23,6 +23,7 @@ export const useCreatePost = (coll: string) => {
         userRef: userRef,
         text: text,
         createdAt: createdAt,
+        image: ""
       });
 
       if (image) {
@@ -31,11 +32,12 @@ export const useCreatePost = (coll: string) => {
 
         const URL = await getDownloadURL(storageRef)
 
-        await setDoc(doc(db, "posts", newDocument.id), { image: URL}, {merge: true});
+        await updateDoc(doc(db, "posts", newDocument.id), { image: URL});
       }
 
       isError = false;
     } catch (e) {
+      console.log(e);
       isError = true;
     }
 
