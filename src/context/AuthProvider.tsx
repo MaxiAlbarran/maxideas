@@ -9,20 +9,20 @@ type Props = {
 
 export const AuthProvider = ({children}: Props) => {
 
-  const [userData, setUserData] = useState<User | null>(null)
+  const [userUid, setUserUid] = useState<string | null>(null)
 
   useEffect(()=>{
     onAuthStateChanged(auth, user => {
       if(user){
-        setUserData(user);
+        setUserUid(user.uid);
       }else{
-        setUserData(null);
+        setUserUid(null);
       }
     })    
   },[])
 
   return (
-    <AuthContext.Provider value={{userData}}>
+    <AuthContext.Provider value={{userUid}}>
       {children}
     </AuthContext.Provider>
   )
