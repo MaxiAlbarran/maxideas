@@ -29,7 +29,7 @@ const Profile = () => {
   const { userUid } = useContext(AuthContext);
 
   const { isOpen, onClose, onOpen } = useDisclosure();
-
+  
   return (
     <>
       <Container
@@ -96,9 +96,9 @@ const Profile = () => {
         {!loadingUserPosts && !userPosts?.length && (
           <Heading fontSize="xl">Aun no hay posteos</Heading>
         )}
-        {!loadingUserPosts && userPosts?.length && (
+        {!loadingUserPosts && userPosts?.length! > 0 && (
           <VStack width="100%" bgColor="container" mb={10}>
-            {userPosts.map(
+            {userPosts!.map(
               (post, i) =>
                 post.createdAt && (
                   <Post

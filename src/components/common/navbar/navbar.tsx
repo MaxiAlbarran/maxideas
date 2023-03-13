@@ -94,7 +94,7 @@ const Navbar = () => {
             <MenuItem
               transition=".1s linear"
               onClick={logOut}
-              _hover={{ bgColor: "red.700" }}
+              _hover={{ color: "red.700" }}
             >
               Cerrar sesion
             </MenuItem>
