@@ -18,7 +18,7 @@ const Catch = () => {
           La pagina que estas buscando no existe, ha sido removida o se no se
           encuentra disponible por ahora
         </Text>
-        <Link to={userUid ? "home" : "/"}>
+        <Link to={userUid ? "/" : "/login"}>
           <Button size="md" colorScheme={"blue"}>
             Ve al inicio
           </Button>

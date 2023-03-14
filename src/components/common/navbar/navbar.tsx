@@ -32,7 +32,7 @@ const Navbar = () => {
     try {
       await signOut(auth);
 
-      navigate("/");
+      navigate("/login");
     } catch (e) {
       console.log(e);
     }
@@ -49,7 +49,7 @@ const Navbar = () => {
         py={2}
       >
         <VStack spacing={0}>
-          <Link to="/home">
+          <Link to="/">
             <HStack spacing={0} fontFamily="murecho" p={0}>
               <Heading color="green" fontSize={{ sm: "md", md: "lg", lg: "3xl" }}>
                 Max
@@ -84,7 +84,7 @@ const Navbar = () => {
             </HStack>
           </MenuButton>
           <MenuList>
-            <MenuItem as={Link} to={`home`}>
+            <MenuItem as={Link} to={`/`}>
               Inicio
             </MenuItem>
             <MenuItem as={Link} to={`user/${userUid}`}>

@@ -54,80 +54,88 @@ const Registration = () => {
         st: "success",
         label: "Registro exitoso",
       });
-      navigate("/home");
+      navigate("/");
     }
   };
 
   return (
-    <Container minW="100%" display="flex" justifyContent={"center"} py={"6"} mt={{sm: "10", lg: "24"}}>
-      {loading ? (
-        <CommonSpinner />
-      ) : (
-        <>
-          <Formulary
-            title="Registration"
-            buttonLabel="Registrarse"
-            onSubmit={(event) => handleSubmit(event)}
-          >
-            <VStack spacing="4">
-              <Stack direction={{sm:"column", md: "row"}} width="100%">
+    <Container minW={{ sm: "100%", lg: "container.lg" }} p={0}>
+      <Container
+        minW="100%"
+        display="flex"
+        justifyContent={"center"}
+        py={"6"}
+        mt={{ sm: "10", lg: "24" }}
+      >
+        {loading ? (
+          <CommonSpinner />
+        ) : (
+          <>
+            <Formulary
+              title="Registration"
+              buttonLabel="Registrarse"
+              onSubmit={(event) => handleSubmit(event)}
+            >
+              <VStack spacing="4">
+                <Stack direction={{ sm: "column", md: "row" }} width="100%">
+                  <CommonInput
+                    label="Nombre"
+                    type="text"
+                    name="name"
+                    value={form?.name}
+                    onChange={(event) => handleChange(event)}
+                  />
+                  <CommonInput
+                    label="Apellido"
+                    isRequired={false}
+                    type="text"
+                    name="surname"
+                    value={form?.surname}
+                    onChange={(event) => handleChange(event)}
+                  />
+                </Stack>
+
                 <CommonInput
-                  label="Nombre"
+                  label="Nombre de usuario"
                   type="text"
-                  name="name"
-                  value={form?.name}
+                  name="username"
+                  value={form?.username}
                   onChange={(event) => handleChange(event)}
                 />
                 <CommonInput
-                  label="Apellido"
-                  isRequired={false}
-                  type="text"
-                  name="surname"
-                  value={form?.surname}
+                  label="Email"
+                  type="email"
+                  name="email"
+                  value={form?.email}
                   onChange={(event) => handleChange(event)}
                 />
-              </Stack>
+                <CommonInput
+                  label="Contraseña"
+                  type="password"
+                  name="password"
+                  value={form?.password}
+                  onChange={(event) => handleChange(event)}
+                  placeholder="De al menos 6 caracteres"
+                />
+              </VStack>
 
-              <CommonInput
-                label="Nombre de usuario"
-                type="text"
-                name="username"
-                value={form?.username}
-                onChange={(event) => handleChange(event)}
-              />
-              <CommonInput
-                label="Email"
-                type="email"
-                name="email"
-                value={form?.email}
-                onChange={(event) => handleChange(event)}
-              />
-              <CommonInput
-                label="Contraseña"
-                type="password"
-                name="password"
-                value={form?.password}
-                onChange={(event) => handleChange(event)}
-                placeholder="De al menos 6 caracteres"
-              />
-            </VStack>
-
-            <HStack align="center" justify={"center"} py="1" my="5">
-              <Text color="#999" fontSize="sm">
-                Ya tienes una cuenta?
-              </Text>
-              <Text
-                color="blue.700"
-                fontSize="md"
-                fontWeight={"bold"}
-                _hover={{ textDecorationLine: "underline" }}
-              >
-                <Link to="/">Login!</Link>
-              </Text>
-            </HStack>
-          </Formulary>
-        </>
-      )}
+              <HStack align="center" justify={"center"} py="1" my="5">
+                <Text color="#999" fontSize="sm">
+                  Ya tienes una cuenta?
+                </Text>
+                <Text
+                  color="blue.700"
+                  fontSize="md"
+                  fontWeight={"bold"}
+                  _hover={{ textDecorationLine: "underline" }}
+                >
+                  <Link to="/login">Login!</Link>
+                </Text>
+              </HStack>
+            </Formulary>
+          </>
+        )}
+      </Container>
     </Container>
   );
 };

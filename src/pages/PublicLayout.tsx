@@ -1,17 +1,20 @@
 import { Container } from "@chakra-ui/react";
-import React from "react";
-import { Outlet } from "react-router-dom";
+import React, { useContext } from "react";
+import { Navigate, Outlet } from "react-router-dom";
 import Navbar from "../components/common/navbar/navbar";
+import { AuthContext } from "../context/AuthContext";
 
 const PublicLayout = () => {
-  return (
+  const { userUid } = useContext(AuthContext);
+  return userUid ? (
     <>
       <Navbar />
-      <Container minW={{sm: "100%", lg: "container.lg"}} p={0}>
-      <Outlet />
-
+      <Container minW={{ sm: "100%", lg: "container.lg" }} p={0}>
+        <Outlet />
       </Container>
     </>
+  ) : (
+    <Navigate to="/login" />
   );
 };
 

@@ -12,17 +12,9 @@ export const getRouter = () =>
       path: "/",
       element: <PublicLayout />,
       errorElement: <Catch/>,
-      children: [
+      children: [        
         {
           index: true,
-          element: <Login />,
-        },
-        {
-          path: "auth",
-          element: <Registration />,
-        },
-        {
-          path: "home",
           element: <Home />,
         },
         {
@@ -30,5 +22,15 @@ export const getRouter = () =>
           element: <Profile />,
         },
       ],
+    },
+    {
+      path:"/login",
+      element: <Login />,
+      errorElement: <Catch />
+    },
+    {
+      path:"/auth",
+      element: <Registration />,
+      errorElement: <Catch />
     },
   ]);
