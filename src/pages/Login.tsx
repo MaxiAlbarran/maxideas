@@ -31,7 +31,7 @@ const Login = () => {
       await signInWithEmailAndPassword(auth, form.email, form.password);
       showToast({ st: "success", label: "Bienvenido!" });
 
-      setTimeout(()=>{navigate("/")}, 2000)
+      navigate("/")
     } catch (err) {
       const e = err as AuthError;
       const message =
